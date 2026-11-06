@@ -1,0 +1,354 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/**/*';
+@source '../../../../app/Livewire/**/*';
+@source '../../../../resources/views/filament/**/*';
+@source '../../../../resources/views/livewire/**/*';
+
+/*
+| Admin look: a quiet, full-height workspace sidebar (logo with a profile menu, a Search row, grouped links with small
+| counts, links at the foot) beside a light content area with a show/hide menu button on every page, and a search
+| pop-up. Neutral greys carry the layout; the brand red is kept for counts and actions.
+*/
+
+/* ---------------------------------------------------------------- Sidebar frame */
+.fi-sidebar {
+    @apply lg:bg-white lg:dark:bg-gray-900;
+}
+
+.fi-sidebar.fi-sidebar-open {
+    @apply lg:border-e lg:border-gray-950/5 lg:dark:border-white/10;
+}
+
+/* Filament's own header (collapse arrows + logo) is replaced by the logo menu; the page button shows/hides the menu */
+.fi-sidebar-header-ctn,
+.fi-body > .fi-layout-sidebar-toggle-btn-ctn {
+    @apply hidden!;
+}
+
+/* ---------------------------------------------------------------- Logo + profile menu */
+.mp-brand-menu {
+    @apply relative shrink-0 px-3 pt-3;
+}
+
+.mp-brand-btn {
+    @apply flex w-full items-center justify-between gap-3 rounded-lg px-2 py-2 outline-hidden transition-colors hover:bg-gray-950/5 focus-visible:bg-gray-950/5 dark:hover:bg-white/5 dark:focus-visible:bg-white/5;
+}
+
+.mp-brand-logo {
+    @apply h-10 w-auto;
+}
+
+.mp-brand-logo-dark {
+    @apply hidden;
+}
+
+.dark .mp-brand-logo-light {
+    @apply hidden;
+}
+
+.dark .mp-brand-logo-dark {
+    @apply block;
+}
+
+.mp-brand-chevron {
+    @apply size-4 shrink-0 text-gray-400 dark:text-gray-500;
+}
+
+.mp-brand-dropdown {
+    @apply absolute inset-x-3 top-full z-40 mt-1 overflow-hidden rounded-lg bg-white py-1 shadow-lg ring-1 ring-gray-950/10 dark:bg-gray-900 dark:ring-white/10;
+}
+
+.mp-brand-user {
+    @apply mx-1 flex flex-col gap-0.5 border-b border-gray-950/5 px-2.5 pt-1.5 pb-2.5 dark:border-white/10;
+}
+
+.mp-brand-user-name {
+    @apply truncate text-[13px] font-medium text-gray-950 dark:text-white;
+}
+
+.mp-brand-user-email {
+    @apply truncate text-[11px] text-gray-500 dark:text-gray-400;
+}
+
+.mp-brand-item {
+    @apply mx-1 mt-1 flex items-center gap-2.5 rounded-md px-2.5 py-2 text-[13px] text-gray-700 transition-colors outline-hidden hover:bg-gray-950/5 focus-visible:bg-gray-950/5 dark:text-gray-200 dark:hover:bg-white/5 dark:focus-visible:bg-white/5;
+}
+
+.mp-brand-item-icon {
+    @apply size-4 text-gray-400 dark:text-gray-500;
+}
+
+/* ---------------------------------------------------------------- Search row (opens the pop-up) */
+.mp-sidebar-search {
+    @apply flex w-full items-center gap-x-2.5 rounded-md px-2.5 py-[7px] text-start outline-hidden transition-colors hover:bg-gray-950/5 focus-visible:bg-gray-950/5 dark:hover:bg-white/5 dark:focus-visible:bg-white/5;
+}
+
+.mp-sidebar-search-icon {
+    @apply size-4 shrink-0 text-gray-400 transition-colors group-hover:text-gray-600 dark:text-gray-500 dark:group-hover:text-gray-300;
+}
+
+.mp-sidebar-search-label {
+    @apply flex-1 text-[13px] text-gray-600 transition-colors group-hover:text-gray-900 dark:text-gray-300 dark:group-hover:text-white;
+}
+
+.mp-sidebar-search-kbd {
+    @apply rounded border border-gray-950/10 bg-gray-950/[0.03] px-1.5 font-sans text-[10px] leading-5 font-medium text-gray-400 dark:border-white/10 dark:bg-white/5 dark:text-gray-500;
+}
+
+/* ---------------------------------------------------------------- Navigation */
+.fi-sidebar-nav {
+    @apply gap-y-5 px-3 pt-3 pb-3;
+    scrollbar-width: none; /* scrolls without a visible bar */
+    scrollbar-gutter: auto;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+/* The Search row sits tight above the first links */
+.mp-sidebar-search + .fi-sidebar-nav-groups {
+    @apply -mt-4.5;
+}
+
+.fi-sidebar-nav-groups {
+    @apply mx-0 gap-y-5;
+}
+
+.fi-sidebar-group,
+.fi-sidebar-group-items {
+    @apply gap-y-0.5;
+}
+
+.fi-sidebar-group-btn {
+    @apply px-2.5 pt-0 pb-1;
+
+    & .fi-icon {
+        @apply size-3.5 text-gray-300 dark:text-gray-600;
+    }
+}
+
+.fi-sidebar-group-label {
+    @apply text-[11px] leading-5 font-semibold tracking-wider text-gray-400 uppercase dark:text-gray-500;
+}
+
+.fi-sidebar-item-btn {
+    @apply justify-start gap-x-2.5 rounded-md px-2.5 py-[7px];
+
+    & > .fi-icon {
+        @apply size-4 text-gray-400 transition-colors dark:text-gray-500;
+    }
+}
+
+.fi-sidebar-item-label {
+    @apply text-[13px] font-normal tracking-[0.01em] text-gray-600 transition-colors dark:text-gray-300;
+}
+
+.fi-sidebar-item.fi-sidebar-item-has-url > .fi-sidebar-item-btn {
+    @apply hover:bg-gray-950/5 focus-visible:bg-gray-950/5 dark:hover:bg-white/5 dark:focus-visible:bg-white/5;
+
+    &:hover > .fi-icon {
+        @apply text-gray-600 dark:text-gray-300;
+    }
+
+    &:hover > .fi-sidebar-item-label {
+        @apply text-gray-900 dark:text-white;
+    }
+}
+
+/* Current page: a soft grey row with dark text, not a coloured one */
+.fi-sidebar-item.fi-active > .fi-sidebar-item-btn {
+    @apply bg-gray-950/[0.06] dark:bg-white/10;
+
+    & > .fi-icon {
+        @apply text-gray-950 dark:text-white;
+    }
+
+    & > .fi-sidebar-item-label {
+        @apply font-medium text-gray-950 dark:text-white;
+    }
+}
+
+/* Counts of new leads */
+.fi-sidebar-item-badge-ctn .fi-badge {
+    @apply min-w-5 justify-center rounded-full px-1.5 py-0 text-[10px] leading-5 font-medium ring-0;
+}
+
+/* ---------------------------------------------------------------- Footer links */
+.mp-sidebar-footer {
+    @apply mx-3 mb-3 border-t border-gray-950/5 pt-3 dark:border-white/10;
+}
+
+.mp-sidebar-footer-list {
+    @apply flex flex-col gap-y-0.5;
+}
+
+.mp-sidebar-footer-item {
+    @apply flex w-full items-center gap-x-2.5 rounded-md px-2.5 py-[7px] text-start text-[13px] text-gray-600 transition-colors outline-hidden hover:bg-gray-950/5 hover:text-gray-900 focus-visible:bg-gray-950/5 dark:text-gray-300 dark:hover:bg-white/5 dark:hover:text-white;
+}
+
+.mp-sidebar-footer-icon {
+    @apply size-4 shrink-0 text-gray-400 dark:text-gray-500;
+}
+
+/* ---------------------------------------------------------------- Content area */
+.fi-body {
+    @apply bg-gray-50/70 dark:bg-gray-950;
+}
+
+/* Show/hide menu button, on the line of the breadcrumbs (or the title when a page has none) */
+.fi-page {
+    @apply relative;
+}
+
+.mp-page-toggle {
+    @apply absolute start-0 top-[1.625rem] z-10 grid size-8 place-items-center rounded-md text-gray-500 transition-colors outline-hidden hover:bg-gray-950/5 hover:text-gray-900 focus-visible:bg-gray-950/5 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-white;
+
+    & svg {
+        @apply size-[18px];
+    }
+}
+
+.fi-page:has(.fi-header:not(.fi-header-has-breadcrumbs)) .mp-page-toggle {
+    @apply top-[2.125rem];
+}
+
+.fi-header-has-breadcrumbs .fi-breadcrumbs {
+    @apply flex min-h-5 items-center ps-11;
+}
+
+.fi-header:not(.fi-header-has-breadcrumbs) .fi-header-heading {
+    @apply ps-11;
+}
+
+/* ---------------------------------------------------------------- Search pop-up */
+.mp-search-backdrop {
+    @apply fixed inset-0 z-50 flex items-start justify-center bg-gray-950/30 px-4 pt-[12vh] backdrop-blur-sm dark:bg-gray-950/60;
+}
+
+.mp-search-panel {
+    @apply w-full max-w-xl overflow-hidden rounded-xl bg-white shadow-2xl ring-1 ring-gray-950/10 dark:bg-gray-900 dark:ring-white/10;
+}
+
+.mp-search-bar {
+    @apply flex items-center gap-3 border-b border-gray-950/5 px-4 dark:border-white/10;
+}
+
+.mp-search-bar-icon {
+    @apply size-[18px] shrink-0 text-gray-400;
+}
+
+.mp-search-input {
+    @apply min-w-0 flex-1 border-0 bg-transparent py-4 text-sm text-gray-950 outline-none placeholder:text-gray-400 focus:ring-0 dark:text-white dark:placeholder:text-gray-500;
+
+    &::-webkit-search-cancel-button {
+        display: none;
+    }
+}
+
+.mp-search-kbd {
+    @apply hidden cursor-pointer rounded border border-gray-950/10 bg-gray-950/[0.04] px-1.5 font-sans text-[10px] leading-5 font-medium text-gray-500 transition-colors hover:text-gray-900 sm:inline-flex dark:border-white/10 dark:bg-white/10 dark:text-gray-400 dark:hover:text-white;
+}
+
+.mp-search-close {
+    @apply rounded-md p-1 text-gray-400 transition-colors hover:bg-gray-950/5 hover:text-gray-900 dark:hover:bg-white/10 dark:hover:text-white;
+}
+
+.mp-search-body {
+    @apply max-h-[60vh] overflow-y-auto;
+}
+
+.mp-search-empty {
+    @apply flex flex-col items-center justify-center gap-2 px-6 py-10 text-[13px] font-medium text-gray-500 dark:text-gray-400;
+}
+
+.mp-search-empty-icon {
+    @apply size-6 text-gray-300 dark:text-gray-600;
+}
+
+.mp-search-results {
+    @apply flex flex-col gap-3 p-2 transition-opacity;
+}
+
+.mp-search-group {
+    @apply px-2.5 pt-1 pb-1.5 text-[11px] font-semibold tracking-wider text-gray-400 uppercase dark:text-gray-500;
+}
+
+.mp-search-result {
+    @apply flex flex-col gap-0.5 rounded-md px-2.5 py-2 outline-hidden transition-colors hover:bg-gray-950/5 focus-visible:bg-gray-950/5 dark:hover:bg-white/5 dark:focus-visible:bg-white/5;
+}
+
+.mp-search-result-title {
+    @apply text-[13px] font-medium text-gray-950 dark:text-white;
+}
+
+.mp-search-result-details {
+    @apply text-xs text-gray-500 dark:text-gray-400;
+}
+
+/* ---------------------------------------------------------------- Table filters in the header rows */
+/*
+| Lists show their filters on the left of the table header: from desktop width the header becomes two columns, with
+| the filters on the left spanning both rows, and Export (first row) and Search (second row) on the right. Labels are
+| kept for screen readers only; each empty box shows the filter's name instead.
+*/
+.fi-ta-header-ctn:has(> .fi-ta-filters-above-content-ctn) {
+    @apply lg:grid lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:border-b lg:border-gray-200 lg:dark:border-white/10;
+
+    & > .fi-ta-filters-above-content-ctn {
+        @apply py-3 lg:col-start-1 lg:row-start-1 lg:border-b-0 lg:pe-0;
+    }
+
+    & > .fi-ta-header {
+        @apply lg:col-start-2 lg:row-start-1 lg:border-b-0 lg:pb-1.5;
+    }
+
+    & > .fi-ta-header-toolbar {
+        @apply lg:col-start-2 lg:row-start-2 lg:border-b-0 lg:pt-1.5;
+    }
+
+    /* With an Export row: the filters sit beside both rows */
+    &:has(> .fi-ta-header) > .fi-ta-filters-above-content-ctn {
+        @apply lg:row-span-2;
+    }
+
+    /* Without one (Export lives in the page header): Search sits on the first line of filters, top right */
+    &:not(:has(> .fi-ta-header)) > .fi-ta-header-toolbar {
+        @apply lg:row-start-1 lg:self-start lg:py-3;
+    }
+
+    &:not(:has(> .fi-ta-header)) > .fi-ta-filters-above-content-ctn {
+        @apply lg:self-start;
+    }
+}
+
+.fi-ta-filters-above-content-ctn {
+    & .fi-ta-filters {
+        @apply gap-y-0;
+    }
+
+    /* No "Filters" heading: active filters show as removable chips under the header */
+    & .fi-ta-filters-header {
+        @apply hidden;
+    }
+
+    & .fi-fo-field-label-col,
+    & .fi-fo-field-label-ctn {
+        @apply sr-only;
+    }
+
+    & .fi-sc,
+    & .fi-fo-field {
+        @apply gap-3;
+    }
+}
+
+/* An unset dropdown filter shows its name in the same light grey as the other empty boxes */
+.fi-ta-filters-above-content-ctn select:has(option[value='']:checked) {
+    @apply text-gray-400 dark:text-gray-500;
+}
+
+.fi-ta-filters-above-content-ctn select option {
+    @apply text-gray-950 dark:text-white;
+}

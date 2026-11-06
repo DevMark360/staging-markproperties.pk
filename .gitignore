@@ -1,0 +1,65 @@
+*.log
+.DS_Store
+.env
+.env.backup
+.env.production
+.phpactor.json
+.phpunit.result.cache
+/.codex
+/.cursor/
+/.idea
+/.nova
+/.phpunit.cache
+/.vscode
+/.zed
+/auth.json
+/node_modules
+/public/fonts-manifest.dev.json
+/public/hot
+# Built styles (public/build) and Filament admin files (public/css|js|fonts/filament) ARE committed: the server
+# (cPanel) cannot run npm, and these are needed to show the site. Rebuild locally with "npm run build" before pushing.
+/public/storage
+/storage/*.key
+/storage/pail
+/vendor
+_ide_helper.php
+Homestead.json
+Homestead.yaml
+Thumbs.db
+
+# ---------------------------------------------------------------------------------------------------------------
+# Kept on the development machine only, never deployed. The live site runs from its imported database and does not
+# need any of these. (Backups and logs in storage/ and .env are already excluded above / by storage's own .gitignore.)
+# ---------------------------------------------------------------------------------------------------------------
+
+# Tests
+/tests
+/phpunit.xml
+/database/factories
+/database/seeders
+
+# Migrations: the live database is imported as SQL in phpMyAdmin. Never run "php artisan migrate" on the server.
+/database/migrations
+
+# Old sample data and the commands that loaded it (the site reads only the database)
+/config/projects.php
+/config/developers.php
+/config/luxe.php
+/config/locations.php
+/resources/content
+/app/Console/Commands/ImportProjects.php
+/app/Console/Commands/ImportDevelopers.php
+/app/Console/Commands/ImportCatalogue.php
+/app/Support/LegacyCatalogue.php
+
+# Unused sample images (Roomi Enclave's cover is still used, so it stays)
+/public/images/projects/*
+!/public/images/projects/roomi-enclave.webp
+/public/images/luxe
+/public/brochures
+
+# Notes and AI-assistant files
+/docs
+/AGENTS.md
+/CLAUDE.md
+/README.md
