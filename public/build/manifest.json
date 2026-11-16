@@ -28,7 +28,7 @@
     "src": "node_modules/@fontsource-variable/inter/files/inter-vietnamese-opsz-normal.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-CnTsmGH6.css",
+    "file": "assets/app-DjJHP8yh.css",
     "name": "app",
     "names": [
       "app.css"
@@ -55,7 +55,7 @@
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-mh1Hwe7k.js",
+    "file": "assets/app-BFoI1rHd.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,

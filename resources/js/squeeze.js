@@ -12,7 +12,8 @@ const SQUEEZED = [-0.12, 0.59, 0.28, 0.13]; // and the others give a little up
 
 const SLAT = 8; // px
 const SLAT_GAP = 8; // px
-const GAP = 16; // px
+// The gap between the four columns is the CSS variable --sq-gap (16px, 8px on phones), set in the markup
+const SWIPE = 40; // px a finger must travel sideways to change area
 
 const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -61,13 +62,13 @@ export default (slides, duration = 1000) => ({
     vars() {
         return {
             '--sq-ms': `${this.ms}ms`,
-            '--sq-room': `calc(100cqi - var(--sq-hero) - ${this.slats * (SLAT_GAP + SLAT)}px - ${3 * GAP}px)`,
+            '--sq-room': `calc(100cqi - var(--sq-hero) - ${this.slats * (SLAT_GAP + SLAT)}px - 3 * var(--sq-gap))`,
         };
     },
 
     stripStyle() {
         return {
-            transform: `translateX(${this.slid * (SLAT + GAP)}px)`,
+            transform: `translateX(calc(${this.slid} * (${SLAT}px + var(--sq-gap))))`,
             transition: this.still ? 'none' : 'transform var(--sq-ms) var(--ease-out-expo)',
         };
     },
@@ -78,7 +79,7 @@ export default (slides, duration = 1000) => ({
 
         return {
             width,
-            marginLeft: place === 0 ? '0px' : col < 4 ? `${GAP}px` : `${SLAT_GAP}px`,
+            marginLeft: place === 0 ? '0px' : col < 4 ? 'var(--sq-gap)' : `${SLAT_GAP}px`,
             borderRadius: `min(var(--sq-radius), calc(${width} / 2))`,
             transitionProperty: 'width, margin-left, border-radius',
             transitionDuration: this.still ? '0s' : 'var(--sq-ms)',
@@ -131,6 +132,19 @@ export default (slides, duration = 1000) => ({
         this.column = 0;
         this.slid = 0;
         thaw ? this.freeze() : (this.still = true);
+    },
+
+    // Swipe on phones: a mostly sideways move of SWIPE px or more opens the next or previous area
+    touchX: 0,
+    touchY: 0,
+    touchStart(event) {
+        this.touchX = event.touches[0].clientX;
+        this.touchY = event.touches[0].clientY;
+    },
+    touchEnd(event) {
+        const dx = event.changedTouches[0].clientX - this.touchX;
+        const dy = event.changedTouches[0].clientY - this.touchY;
+        if (Math.abs(dx) >= SWIPE && Math.abs(dx) > Math.abs(dy)) this.step(dx < 0 ? 1 : -1);
     },
 
     // A narrow panel opens; the open one follows its link (areas with published projects only)

@@ -378,7 +378,7 @@
                 </x-reveal>
 
                 @php
-                    // From 640px with 3+ areas: the squeeze carousel below. Phones (and 1-2 areas) keep the swipe cards.
+                    // With 3+ areas: the squeeze carousel below, at every screen size. With 1-2 areas: these cards.
                     $squeeze = $locations->count() >= 3;
                     $squeezeSlides = $locations->map(fn (array $l) => [
                         'name' => $l['name'],
@@ -391,7 +391,7 @@
 
                 <div @class([
                     'scrollbar-none mt-section-body -mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-px-4 px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4',
-                    'sm:hidden!' => $squeeze,
+                    'hidden!' => $squeeze,
                 ])>
                     @foreach ($locations as $location)
                         {{-- Every area switched on for the home page shows; only those with a published project link to it --}}
@@ -402,8 +402,11 @@
                                     'relative block aspect-[4/5] overflow-hidden rounded-3xl bg-ink text-white ring-1 ring-ink/5',
                                     'group transition-all duration-500 ease-out-expo hover:-translate-y-1.5 hover:shadow-[0_34px_60px_-28px_rgba(220,26,33,.55)] hover:ring-white/25' => $linked,
                                 ])>
+                                {{-- The whole photo, never cropped (a wide photo shows complete); a blurred copy fills the rest of the card --}}
+                                <img src="{{ \App\Support\Projects::imageUrl($location['image'], 'locations') }}" alt="" aria-hidden="true" loading="lazy"
+                                    class="absolute inset-0 h-full w-full scale-110 object-cover opacity-80 blur-2xl">
                                 <img src="{{ \App\Support\Projects::imageUrl($location['image'], 'locations') }}" alt="{{ $location['name'] }}, {{ \App\Support\Projects::cityName($location['city']) }}" width="600" height="750" loading="lazy"
-                                    class="absolute inset-0 h-full w-full object-cover transition-transform duration-[1200ms] ease-out-expo group-hover:scale-110">
+                                    class="absolute inset-0 h-full w-full object-contain transition-transform duration-[1200ms] ease-out-expo group-hover:scale-105">
                                 <span class="absolute inset-0 bg-linear-to-t from-ink via-ink/45 to-ink/0 transition-opacity duration-500" aria-hidden="true"></span>
                                 <span class="absolute inset-0 bg-linear-to-t from-brand/25 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" aria-hidden="true"></span>
 
@@ -437,9 +440,10 @@
 
                 @if ($squeeze)
                     {{-- Squeeze carousel: one open area, the next ones narrower, the rest as slats (resources/js/squeeze.js) --}}
-                    <x-reveal class="mt-section-body hidden sm:block">
+                    <x-reveal class="mt-section-body">
                         <div x-data="squeeze(@js($squeezeSlides))" :style="vars()" @mouseleave="hover = -1"
-                            class="w-full [--sq-h:clamp(14rem,31cqi,24rem)] [--sq-hero:calc(var(--sq-h)*16/9)] [--sq-radius:1.25rem] [container-type:inline-size]">
+                            class="w-full [container-type:inline-size] [--sq-radius:1.25rem] [--sq-gap:16px] [--sq-h:clamp(14rem,31cqi,24rem)] [--sq-hero:calc(var(--sq-h)*16/9)] max-sm:[--sq-gap:8px] max-sm:[--sq-hero:calc(100cqi*0.62)] max-sm:[--sq-h:calc(var(--sq-hero)*1.25)]">
+                            {{-- Phones: a tall open panel about 62% of the width (area photos are tall), smaller gaps --}}
 
                             <div class="mb-4 flex justify-end gap-2">
                                 <button type="button" @click="step(-1)" aria-label="Previous area"
@@ -454,19 +458,22 @@
 
                             <div class="w-full overflow-hidden" style="height: var(--sq-h)">
                                 <div role="tablist" aria-label="Areas" class="flex h-full w-max" :style="stripStyle()"
-                                    @keydown.right.prevent="step(1)" @keydown.left.prevent="step(-1)">
+                                    @keydown.right.prevent="step(1)" @keydown.left.prevent="step(-1)"
+                                    @touchstart.passive="touchStart($event)" @touchend.passive="touchEnd($event)">
                                     <template x-for="(card, place) in cards" :key="card.key">
                                         <button type="button" role="tab" :aria-selected="col(place) === 0" :tabindex="col(place) === 0 ? 0 : -1"
                                             :aria-label="slides[card.slide].name + ', ' + slides[card.slide].city"
                                             @mousemove="hover = col(place)" @click="pick(place)" :style="cardStyle(place)"
                                             :class="col(place) === 0 && slides[card.slide].href ? 'cursor-pointer' : (col(place) === 0 ? 'cursor-default' : 'cursor-pointer')"
                                             class="relative isolate h-full shrink-0 overflow-hidden bg-ink p-0 outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-mist">
-                                            {{-- Drawn at one 16:9 size and centred, so a narrowing panel only shows less of the photo --}}
+                                            {{-- The whole photo top to bottom (area photos are tall): drawn at the panel's full height and
+                                                 centred, so a narrow panel shows its middle; a blurred copy fills any space beside it --}}
+                                            <img :src="slides[card.slide].image" alt="" aria-hidden="true" draggable="false" loading="lazy"
+                                                class="absolute inset-0 h-full w-full scale-110 object-cover opacity-80 blur-2xl">
                                             <img :src="slides[card.slide].image" alt="" draggable="false" loading="lazy"
-                                                class="absolute inset-y-0 left-1/2 h-full max-w-none -translate-x-1/2 object-cover"
-                                                style="width: var(--sq-hero); min-width: 100%">
+                                                class="absolute inset-y-0 left-1/2 h-full w-auto max-w-none -translate-x-1/2">
                                             <span aria-hidden="true"
-                                                class="pointer-events-none absolute inset-x-0 bottom-0 bg-linear-to-t from-ink/85 via-ink/40 to-transparent p-6 pt-24 text-start text-white transition-opacity"
+                                                class="pointer-events-none absolute inset-x-0 bottom-0 bg-linear-to-t from-ink/85 via-ink/40 to-transparent p-4 pt-16 text-start text-white transition-opacity sm:p-6 sm:pt-24"
                                                 :style="{ opacity: col(place) === 0 ? 1 : 0, transitionDuration: 'var(--sq-ms)' }">
                                                 <span class="block text-sm text-white/60" x-text="slides[card.slide].city"></span>
                                                 <span class="text-card-title mt-1 block font-bold leading-tight" x-text="slides[card.slide].name"></span>
