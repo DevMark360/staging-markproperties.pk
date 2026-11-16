@@ -50,7 +50,7 @@
                 </h1>
 
                 <p class="mt-4 max-w-xl animate-rise text-lead leading-relaxed text-white/70 [animation-delay:500ms] sm:mt-6">
-                    Explore pre-launch and under-construction projects from leading builders across Pakistan, from Karachi to Lahore, Islamabad and beyond.
+                    Explore pre-launch and under-construction projects from leading builders across Pakistan.
                 </p>
 
                 <form action="{{ route('projects.index') }}" method="GET" role="search" class="mt-9 animate-rise [animation-delay:620ms]">
