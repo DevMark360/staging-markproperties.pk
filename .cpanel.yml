@@ -1,0 +1,18 @@
+---
+# cPanel "Git Version Control" → "Deploy HEAD Commit" runs these steps.
+# The repository is cloned somewhere else (e.g. /home/markprop/repositories/...); the site lives in DEPLOYPATH.
+# Only files in git are copied, so the server's .env, public/uploads (photos) and storage/ contents are never
+# overwritten. Create DEPLOYPATH/.env before the first deploy, or the artisan steps at the end will fail.
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/markprop/staging.markproperties.pk/
+    - export PHP=/opt/cpanel/ea-php83/root/usr/bin/php
+    - /bin/mkdir -p $DEPLOYPATH
+    - /bin/cp -R * $DEPLOYPATH
+    - /bin/cp .htaccess $DEPLOYPATH
+    - /bin/mkdir -p $DEPLOYPATH/public/uploads $DEPLOYPATH/storage/logs $DEPLOYPATH/storage/framework/cache $DEPLOYPATH/storage/framework/sessions $DEPLOYPATH/storage/framework/views $DEPLOYPATH/bootstrap/cache
+    - /bin/chmod -R 775 $DEPLOYPATH/storage $DEPLOYPATH/bootstrap/cache $DEPLOYPATH/public/uploads
+    - cd $DEPLOYPATH && $PHP /opt/cpanel/composer/bin/composer install --no-dev --optimize-autoloader --no-interaction
+    - cd $DEPLOYPATH && $PHP artisan optimize:clear
+    - cd $DEPLOYPATH && $PHP artisan optimize
+    - cd $DEPLOYPATH && $PHP artisan filament:optimize
