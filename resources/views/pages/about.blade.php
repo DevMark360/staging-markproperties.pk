@@ -31,7 +31,7 @@
 @endpush
 
 <x-layouts.app title="About Us" :image="asset('images/about/office.webp')"
-    description="Mark Properties is the Karachi property advisory behind AbadRaho.com, helping buyers find, compare and book new off-plan projects across Pakistan.">
+    description="Mark Properties is the Karachi real estate advisory behind AbadRaho.com, helping buyers find, compare and book new off-plan projects across Pakistan.">
 
     <x-page-header title="Off-plan property advisors for buyers and builders" breadcrumb="About us"
         lead="Mark Properties is the Karachi real estate advisory behind AbadRaho.com. We help buyers find, evaluate and book new residential and commercial projects from trusted builders.">
@@ -69,7 +69,7 @@
         <div class="mx-auto grid max-w-7xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-8">
             <x-reveal class="lg:col-span-5">
                 <div class="group relative overflow-hidden rounded-[18px] shadow-[0_40px_70px_-40px_rgba(20,20,20,.55)]">
-                    <img src="{{ asset('images/about/office.webp') }}" alt="Mark Properties, the AbadRaho real estate advisory team" width="1200" height="900" loading="lazy"
+                    <img src="{{ asset('images/about/office.webp') }}" alt="Mark Properties, the Karachi real estate advisory behind AbadRaho.com" width="1200" height="900" loading="lazy"
                         class="aspect-[4/5] w-full object-cover object-center transition-transform duration-[1200ms] ease-out-expo group-hover:scale-105">
                     <span class="absolute inset-x-0 bottom-0 h-1 bg-brand" aria-hidden="true"></span>
                 </div>
@@ -82,7 +82,7 @@
                 </blockquote>
                 <div class="mt-8 space-y-4 text-[15px] leading-relaxed text-ink-soft">
                     <p>Mark Properties has grown into one of Pakistan’s trusted real estate advisory firms. Since our founding, we have helped buyers find off-plan residential and commercial projects and complete their purchases with clear documentation and ethical guidance.</p>
-                    <p>Our clients return to us because we combine market expertise with responsive service. Every project on AbadRaho is supported by trained property advisors who explain handover timelines and developer credentials in plain language.</p>
+                    <p>Our clients return to us because we combine market expertise with responsive service. Every project on AbadRaho.com is supported by trained property advisors who explain handover timelines and developer credentials in plain language.</p>
                     <p>Our reputation is built on transparency, honest communication and consistent follow-through, whether you are buying an apartment in Karachi, a plot in a growing corridor, or a commercial unit for rental income.</p>
                 </div>
                 <div class="mt-8 flex items-center gap-4 border-t border-line pt-6">

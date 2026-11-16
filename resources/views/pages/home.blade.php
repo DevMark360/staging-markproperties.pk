@@ -244,7 +244,7 @@
             <div class="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <x-reveal>
                     <x-section-header :dark="true" size="lg" title="Trending projects across Pakistan"
-                        lead="The off-plan projects buyers are exploring most on AbadRaho right now."
+                        lead="The off-plan projects buyers are exploring most on AbadRaho.com right now."
                         action="All projects" :href="route('projects.index')" />
                 </x-reveal>
 
