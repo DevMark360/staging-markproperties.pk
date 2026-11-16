@@ -6,13 +6,14 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/markprop/staging.markproperties.pk/
-    - export PHP=/opt/cpanel/ea-php83/root/usr/bin/php
+    # PHP 8.4: the locked packages need it (8.3 is too old). Composer is at /usr/local/bin/composer on this server.
+    - export PHP=/opt/cpanel/ea-php84/root/usr/bin/php
     - /bin/mkdir -p $DEPLOYPATH
     - /bin/cp -R * $DEPLOYPATH
     - /bin/cp .htaccess $DEPLOYPATH
     - /bin/mkdir -p $DEPLOYPATH/public/uploads $DEPLOYPATH/storage/logs $DEPLOYPATH/storage/framework/cache $DEPLOYPATH/storage/framework/sessions $DEPLOYPATH/storage/framework/views $DEPLOYPATH/bootstrap/cache
     - /bin/chmod -R 775 $DEPLOYPATH/storage $DEPLOYPATH/bootstrap/cache $DEPLOYPATH/public/uploads
-    - cd $DEPLOYPATH && $PHP /opt/cpanel/composer/bin/composer install --no-dev --optimize-autoloader --no-interaction
+    - cd $DEPLOYPATH && $PHP -d memory_limit=-1 /usr/local/bin/composer install --no-dev --optimize-autoloader --no-interaction
     - cd $DEPLOYPATH && $PHP artisan optimize:clear
     - cd $DEPLOYPATH && $PHP artisan optimize
     - cd $DEPLOYPATH && $PHP artisan filament:optimize
