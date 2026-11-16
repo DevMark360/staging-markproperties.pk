@@ -377,7 +377,22 @@
                         action="All areas" :href="route('projects.index')" />
                 </x-reveal>
 
-                <div class="scrollbar-none mt-section-body -mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-px-4 px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4">
+                @php
+                    // From 640px with 3+ areas: the squeeze carousel below. Phones (and 1-2 areas) keep the swipe cards.
+                    $squeeze = $locations->count() >= 3;
+                    $squeezeSlides = $locations->map(fn (array $l) => [
+                        'name' => $l['name'],
+                        'city' => \App\Support\Projects::cityName($l['city']),
+                        'description' => $l['description'],
+                        'image' => \App\Support\Projects::imageUrl($l['image'], 'locations'),
+                        'href' => $l['projects'] > 0 ? route('projects.index', ['city' => $l['city'], 'area' => $l['slug']]) : null,
+                    ])->values();
+                @endphp
+
+                <div @class([
+                    'scrollbar-none mt-section-body -mx-4 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-px-4 px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4',
+                    'sm:hidden!' => $squeeze,
+                ])>
                     @foreach ($locations as $location)
                         {{-- Every area switched on for the home page shows; only those with a published project link to it --}}
                         @php $linked = $location['projects'] > 0; @endphp
@@ -419,6 +434,71 @@
                         </x-reveal>
                     @endforeach
                 </div>
+
+                @if ($squeeze)
+                    {{-- Squeeze carousel: one open area, the next ones narrower, the rest as slats (resources/js/squeeze.js) --}}
+                    <x-reveal class="mt-section-body hidden sm:block">
+                        <div x-data="squeeze(@js($squeezeSlides))" :style="vars()" @mouseleave="hover = -1"
+                            class="w-full [--sq-h:clamp(14rem,31cqi,24rem)] [--sq-hero:calc(var(--sq-h)*16/9)] [--sq-radius:1.25rem] [container-type:inline-size]">
+
+                            <div class="mb-4 flex justify-end gap-2">
+                                <button type="button" @click="step(-1)" aria-label="Previous area"
+                                    class="grid h-11 w-11 place-items-center rounded-full bg-white text-ink ring-1 ring-ink/10 transition-colors hover:bg-ink hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand">
+                                    <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5 7 10l5 5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </button>
+                                <button type="button" @click="step(1)" aria-label="Next area"
+                                    class="grid h-11 w-11 place-items-center rounded-full bg-white text-ink ring-1 ring-ink/10 transition-colors hover:bg-ink hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand">
+                                    <svg class="h-4 w-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m8 5 5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </button>
+                            </div>
+
+                            <div class="w-full overflow-hidden" style="height: var(--sq-h)">
+                                <div role="tablist" aria-label="Areas" class="flex h-full w-max" :style="stripStyle()"
+                                    @keydown.right.prevent="step(1)" @keydown.left.prevent="step(-1)">
+                                    <template x-for="(card, place) in cards" :key="card.key">
+                                        <button type="button" role="tab" :aria-selected="col(place) === 0" :tabindex="col(place) === 0 ? 0 : -1"
+                                            :aria-label="slides[card.slide].name + ', ' + slides[card.slide].city"
+                                            @mousemove="hover = col(place)" @click="pick(place)" :style="cardStyle(place)"
+                                            :class="col(place) === 0 && slides[card.slide].href ? 'cursor-pointer' : (col(place) === 0 ? 'cursor-default' : 'cursor-pointer')"
+                                            class="relative isolate h-full shrink-0 overflow-hidden bg-ink p-0 outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-mist">
+                                            {{-- Drawn at one 16:9 size and centred, so a narrowing panel only shows less of the photo --}}
+                                            <img :src="slides[card.slide].image" alt="" draggable="false" loading="lazy"
+                                                class="absolute inset-y-0 left-1/2 h-full max-w-none -translate-x-1/2 object-cover"
+                                                style="width: var(--sq-hero); min-width: 100%">
+                                            <span aria-hidden="true"
+                                                class="pointer-events-none absolute inset-x-0 bottom-0 bg-linear-to-t from-ink/85 via-ink/40 to-transparent p-6 pt-24 text-start text-white transition-opacity"
+                                                :style="{ opacity: col(place) === 0 ? 1 : 0, transitionDuration: 'var(--sq-ms)' }">
+                                                <span class="block text-sm text-white/60" x-text="slides[card.slide].city"></span>
+                                                <span class="text-card-title mt-1 block font-bold leading-tight" x-text="slides[card.slide].name"></span>
+                                            </span>
+                                        </button>
+                                    </template>
+                                </div>
+                            </div>
+
+                            {{-- The open area's description and link, cross-fading as it changes --}}
+                            <div class="mt-6 grid" aria-live="polite">
+                                @foreach ($squeezeSlides as $i => $slide)
+                                    <div class="col-start-1 row-start-1 flex flex-col gap-4 transition-opacity md:flex-row md:items-start md:justify-between md:gap-10"
+                                        :style="{ opacity: open === {{ $i }} ? 1 : 0, visibility: open === {{ $i }} ? 'visible' : 'hidden', transitionDuration: 'var(--sq-ms)' }"
+                                        :aria-hidden="open !== {{ $i }}" @if ($i > 0) style="opacity: 0; visibility: hidden" @endif>
+                                        <p class="text-lead max-w-3xl">
+                                            <span class="font-semibold text-ink">{{ $slide['name'] }}, {{ $slide['city'] }}.</span>
+                                            <span class="text-muted">{{ $slide['description'] }}</span>
+                                        </p>
+                                        @if ($slide['href'])
+                                            <a href="{{ $slide['href'] }}" :tabindex="open === {{ $i }} ? 0 : -1"
+                                                class="group inline-flex min-h-11 shrink-0 items-center gap-2 self-start rounded-full bg-brand px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand">
+                                                Explore projects
+                                                <svg class="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="m8 5 5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                            </a>
+                                        @endif
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </x-reveal>
+                @endif
             </div>
         </section>
     @endif

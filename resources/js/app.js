@@ -3,6 +3,7 @@ import collapse from '@alpinejs/collapse';
 import focus from '@alpinejs/focus';
 import combo from './combo.js';
 import intersect from '@alpinejs/intersect';
+import squeeze from './squeeze.js';
 
 Alpine.plugin(collapse);
 Alpine.plugin(combo); // x-combo: modern, searchable dropdowns over the native selects
@@ -10,6 +11,9 @@ Alpine.plugin(focus); // x-trap: keyboard focus stays inside an open pop-up pane
 Alpine.plugin(intersect);
 
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+// Home page areas: one open panel, the rest squeezed into narrower panels and slats (resources/js/squeeze.js)
+Alpine.data('squeeze', squeeze);
 
 // Homepage hero: background slides + featured launch card, advanced by the progress bar
 Alpine.data('heroSlider', (count) => ({
