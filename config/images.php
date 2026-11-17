@@ -22,9 +22,10 @@ return [
 
     'quality' => 80, // WebP quality, 0–100
 
-    // Refuse images larger than this many pixels (width × height) before decoding: 25 MP covers any phone or camera
-    'max_pixels' => 25_000_000,
+    // Refuse images larger than this many pixels (width × height) before decoding. 120 MP takes 108 MP phone photos;
+    // decoded, one needs about 4 bytes a pixel (~480 MB), hence the memory limit below.
+    'max_pixels' => 120_000_000,
 
     // PHP memory limit while an image is being resized (restored straight after)
-    'memory_limit' => '512M',
+    'memory_limit' => '1024M',
 ];
