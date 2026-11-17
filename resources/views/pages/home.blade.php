@@ -606,4 +606,6 @@
 
     @include('pages.home.launch-alerts')
 
+    @include('pages.home.finder')
+
 </x-layouts.app>

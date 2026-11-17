@@ -4,6 +4,7 @@ import focus from '@alpinejs/focus';
 import combo from './combo.js';
 import intersect from '@alpinejs/intersect';
 import squeeze from './squeeze.js';
+import finder from './finder.js';
 
 Alpine.plugin(collapse);
 Alpine.plugin(combo); // x-combo: modern, searchable dropdowns over the native selects
@@ -289,6 +290,9 @@ const backgroundForm = () => ({
 });
 Alpine.data('launchAlerts', backgroundForm);
 Alpine.data('backgroundForm', backgroundForm);
+
+// Home page property finder pop-up (resources/js/finder.js), sending its form like the others
+Alpine.data('finder', (questions, settings) => ({ ...backgroundForm(), ...finder(questions, settings) }));
 
 // Project enquiry form. Any button can open it with a preset request: $dispatch('enquire', { interest: 'site-visit' })
 Alpine.data('enquiryForm', (interest = 'general') => ({

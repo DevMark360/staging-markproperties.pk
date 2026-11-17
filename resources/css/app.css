@@ -214,6 +214,22 @@ html {
     }
 }
 
+/* Property finder pop-up: each question slides in from the side it comes from (resources/views/pages/home/finder.blade.php) */
+.finder-step-fwd {
+    animation: finder-step 0.45s var(--ease-out-expo) both;
+    --finder-from: 28px;
+}
+.finder-step-back {
+    animation: finder-step 0.45s var(--ease-out-expo) both;
+    --finder-from: -28px;
+}
+@keyframes finder-step {
+    from {
+        opacity: 0;
+        transform: translateX(var(--finder-from));
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     *,
     ::before,

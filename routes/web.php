@@ -4,6 +4,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DeveloperController;
 use App\Http\Controllers\EnquiryController;
+use App\Http\Controllers\FinderController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\LaunchAlertController;
 use App\Http\Controllers\LuxeController;
@@ -23,6 +24,10 @@ Route::post('/enquiries', EnquiryController::class)
 Route::post('/launch-alerts', LaunchAlertController::class)
     ->middleware(['throttle:5,1', SilentHoneypot::class])
     ->name('alerts.store');
+
+Route::post('/property-finder', FinderController::class)
+    ->middleware(['throttle:5,1', SilentHoneypot::class])
+    ->name('finder.store');
 
 // Pages below render a placeholder until their section is built.
 Route::get('/projects', [ProjectController::class, 'index'])->name('projects.index');

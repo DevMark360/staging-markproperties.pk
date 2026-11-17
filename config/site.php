@@ -29,6 +29,16 @@ return [
         'address' => env('SITE_ADDRESS', 'Plot Number B-354, Ground Floor, C.H.S, Mohammad Ali Society Block 7-8 Adamjee Nagar Society, Kathiawaar, Karachi, Pakistan'),
     ],
 
+    // Property finder: the home page pop-up (questions are set in the admin under Content → Property finder).
+    // It opens after `delay` seconds with no scrolling, clicking or typing, at most once every `days` days per
+    // visitor, and never again once they have sent their details.
+    'finder' => [
+        'enabled' => (bool) env('FINDER_ENABLED', true),
+        'delay' => (int) env('FINDER_DELAY', 30),
+        'days' => (int) env('FINDER_DAYS', 7),
+        'title' => 'Let’s find your ideal property',
+    ],
+
     // "Book a meeting" on the Partner page: a Google Calendar appointment schedule (Google Meet) or Cal.com link (cal.com/<user>/<event>),
     // shown in the page. Set BOOKING_URL in .env; the section is hidden while it is empty.
     'booking_url' => env('BOOKING_URL'),
