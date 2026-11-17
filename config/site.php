@@ -29,6 +29,10 @@ return [
         'address' => env('SITE_ADDRESS', 'Plot Number B-354, Ground Floor, C.H.S, Mohammad Ali Society Block 7-8 Adamjee Nagar Society, Kathiawaar, Karachi, Pakistan'),
     ],
 
+    // "Book a meeting" on the Partner page: a Google Calendar appointment schedule (Google Meet) or Calendly link,
+    // shown in the page. Set BOOKING_URL in .env; the section is hidden while it is empty.
+    'booking_url' => env('BOOKING_URL'),
+
     // Office location (Google Maps embed + a link that opens the place in Google Maps)
     'map' => [
         'embed' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3619.4821657873595!2d67.0840087!3d24.8815298!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3eb33f1900ffca1b%3A0x3576e71c1b40db05!2sMark%20Properties!5e0!3m2!1sen!2s!4v1793607230289!5m2!1sen!2s',

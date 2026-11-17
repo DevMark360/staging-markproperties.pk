@@ -1,6 +1,12 @@
 @php
     $contact = config('site.contact');
     $sent = (bool) session('partner_sent');
+
+    // Booking page shown in the page (Google Calendar appointment schedules need ?gv=true to load in a frame)
+    $booking = config('site.booking_url');
+    if ($booking && str_contains($booking, 'calendar.google.com') && ! str_contains($booking, 'gv=true')) {
+        $booking .= (str_contains($booking, '?') ? '&' : '?').'gv=true';
+    }
     $field = 'mt-2 block w-full rounded-xl border border-line bg-white px-4 py-3 text-[15px] text-ink transition duration-200 placeholder:text-muted/60 hover:border-ink/30 focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5';
     $label = 'text-sm font-semibold text-ink';
     $chevron = '<svg class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2"><path d="m8 5 5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -102,6 +108,9 @@
             <p class="text-lead mt-6 max-w-2xl leading-relaxed text-white/75">We present your off-plan project to buyers searching for new launches across Pakistan, and our advisors take every enquiry through to a site visit and a booking with your team.</p>
             <div class="mt-9 flex flex-wrap gap-3">
                 <a href="#partner-form" class="btn btn-primary">Tell us about your project</a>
+                @if ($booking)
+                    <a href="#book-meeting" class="btn btn-outline-light">Book a meeting</a>
+                @endif
             </div>
         </div>
     </section>
@@ -148,6 +157,9 @@
                             </span>
                             <h2 class="text-section mt-6 font-bold tracking-tight text-ink">Request sent</h2>
                             <p class="mt-3 max-w-md text-lg leading-relaxed text-ink-soft">Thank you<span x-show="name.trim()">, <span x-text="name.trim().split(' ')[0]"></span></span>. A partnerships advisor will call you to talk about <span x-text="company.trim() || 'your project'"></span>.</p>
+                            @if ($booking)
+                                <a href="#book-meeting" class="btn btn-primary mt-7">Book a Google Meet call</a>
+                            @endif
                         </div>
 
                         <form x-show="! done && ! @js($sent)" method="POST" action="{{ route('partner.store') }}" @submit.prevent="step === total ? submit($el) : go(step + 1)" novalidate>
@@ -293,6 +305,30 @@
         </div>
     </section>
 
+    {{-- Book a meeting: the Google Calendar (or Calendly) booking page, in the page. Hidden while BOOKING_URL is empty. --}}
+    @if ($booking)
+        <section id="book-meeting" class="scroll-mt-24">
+            <div class="py-section-sm mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-8">
+                <div class="lg:col-span-4 lg:pt-4">
+                    <h2 class="text-section font-bold tracking-tight text-ink">Book a meeting</h2>
+                    <p class="text-lead mt-4 leading-relaxed text-ink-soft">Pick a time for a Google Meet call with our partnerships team. Bring your project details and we’ll talk through how we can market it.</p>
+                    <ul class="mt-7 space-y-3 text-ink-soft">
+                        @foreach (['A video call on Google Meet', 'The meeting link is sent to your email', 'No commitment'] as $point)
+                            <li class="flex gap-3">{!! $check !!}<span>{{ $point }}</span></li>
+                        @endforeach
+                    </ul>
+                </div>
+                <div class="lg:col-span-8">
+                    <div class="overflow-hidden rounded-2xl border border-line bg-white">
+                        <iframe src="{{ $booking }}" title="Book a meeting with Mark Properties" loading="lazy"
+                            class="block h-[42rem] w-full border-0 sm:h-[44rem]"></iframe>
+                    </div>
+                    <p class="mt-3 text-sm text-muted">Calendar not loading? <a href="{{ config('site.booking_url') }}" target="_blank" rel="noopener" class="font-semibold text-ink underline decoration-brand decoration-2 underline-offset-4 hover:text-brand">Open the booking page</a></p>
+                </div>
+            </div>
+        </section>
+    @endif
+
     {{-- Partners --}}
     @if ($partners->isNotEmpty())
         <section class="bg-ink text-white">
@@ -380,6 +416,9 @@
             </div>
             <div class="flex flex-wrap gap-3">
                 <a href="#partner-form" class="btn btn-primary">Tell us about your project</a>
+                @if ($booking)
+                    <a href="#book-meeting" class="btn btn-outline-light">Book a meeting</a>
+                @endif
             </div>
         </div>
     </section>
