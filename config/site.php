@@ -29,7 +29,7 @@ return [
         'address' => env('SITE_ADDRESS', 'Plot Number B-354, Ground Floor, C.H.S, Mohammad Ali Society Block 7-8 Adamjee Nagar Society, Kathiawaar, Karachi, Pakistan'),
     ],
 
-    // "Book a meeting" on the Partner page: a Google Calendar appointment schedule (Google Meet) or Calendly link,
+    // "Book a meeting" on the Partner page: a Google Calendar appointment schedule (Google Meet) or Cal.com link (cal.com/<user>/<event>),
     // shown in the page. Set BOOKING_URL in .env; the section is hidden while it is empty.
     'booking_url' => env('BOOKING_URL'),
 

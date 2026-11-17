@@ -4,6 +4,8 @@
 
     // Booking page shown in the page (Google Calendar appointment schedules need ?gv=true to load in a frame)
     $booking = config('site.booking_url');
+    // A Cal.com link (cal.com/<user>/<event>) is shown with Cal's own embed instead of a plain frame
+    $cal = $booking && preg_match('~^https?://(?:app\.)?cal\.com/([^?#]+)~', $booking, $m) ? trim($m[1], '/') : null;
     if ($booking && str_contains($booking, 'calendar.google.com') && ! str_contains($booking, 'gv=true')) {
         $booking .= (str_contains($booking, '?') ? '&' : '?').'gv=true';
     }
@@ -305,7 +307,7 @@
         </div>
     </section>
 
-    {{-- Book a meeting: the Google Calendar (or Calendly) booking page, in the page. Hidden while BOOKING_URL is empty. --}}
+    {{-- Book a meeting: the Cal.com or Google Calendar booking page, in the page. Hidden while BOOKING_URL is empty. --}}
     @if ($booking)
         <section id="book-meeting" class="scroll-mt-24">
             <div class="py-section-sm mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-8">
@@ -319,11 +321,42 @@
                     </ul>
                 </div>
                 <div class="lg:col-span-8">
-                    {{-- Google draws its own framed card, so no border here (it would double up). Phones stack the calendar above the times, so they need more height. --}}
-                    <div class="overflow-hidden rounded-2xl bg-white">
-                        <iframe src="{{ $booking }}" title="Book a meeting with Mark Properties" loading="lazy"
-                            class="block h-[58rem] w-full border-0 sm:h-[46rem]"></iframe>
-                    </div>
+                    @if ($cal)
+                        {{-- Cal.com. Tablets and up: the month and the free times side by side, sized to fit by Cal itself.
+                             Phones would stack a long list of times under the month, so they get a button that opens the
+                             same booking screen full-screen instead. Cal's script loads only when the section comes near. --}}
+                        <div id="cal-booking" class="hidden min-h-[30rem] overflow-hidden rounded-2xl border border-line bg-white sm:block"></div>
+                        <div class="rounded-2xl border border-line bg-white p-6 sm:hidden">
+                            <p class="font-semibold text-ink">Partner meeting on Google Meet</p>
+                            <p class="mt-1 text-sm leading-relaxed text-ink-soft">See the free times and pick the one that suits you.</p>
+                            <button type="button" data-cal-namespace="partner" data-cal-link="{{ $cal }}" data-cal-config='{"layout":"month_view","theme":"light"}'
+                                class="btn btn-primary mt-5 w-full">Pick a time</button>
+                        </div>
+                        <script>
+                            (() => {
+                                const start = () => {
+                                    (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement('script')).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if (typeof namespace === 'string') { cal.ns[namespace] = cal.ns[namespace] || api; p(cal.ns[namespace], ar); p(cal, ['initNamespace', namespace]); } else p(cal, ar); return; } p(cal, ar); }; })(window, 'https://app.cal.com/embed/embed.js', 'init');
+                                    Cal('init', 'partner', { origin: 'https://app.cal.com' });
+                                    if (window.matchMedia('(min-width: 640px)').matches) {
+                                        Cal.ns.partner('inline', { elementOrSelector: '#cal-booking', calLink: @js($cal), config: { layout: 'month_view', theme: 'light' } });
+                                    }
+                                    // Brand red, and no event card above the calendar (the text beside it already says what the meeting is)
+                                    Cal.ns.partner('ui', { theme: 'light', hideEventTypeDetails: true, layout: 'month_view', cssVarsPerTheme: { light: { 'cal-brand': '#ed1c24' } } });
+                                };
+                                const section = document.getElementById('book-meeting');
+                                const seen = new IntersectionObserver((entries) => {
+                                    if (entries.some((e) => e.isIntersecting)) { seen.disconnect(); start(); }
+                                }, { rootMargin: '600px 0px' });
+                                seen.observe(section);
+                            })();
+                        </script>
+                    @else
+                        {{-- Google draws its own framed card, so no border here (it would double up). Phones stack the calendar above the times, so they need more height. --}}
+                        <div class="overflow-hidden rounded-2xl bg-white">
+                            <iframe src="{{ $booking }}" title="Book a meeting with Mark Properties" loading="lazy"
+                                class="block h-[58rem] w-full border-0 sm:h-[46rem]"></iframe>
+                        </div>
+                    @endif
                     <p class="mt-3 text-sm text-muted">Calendar not loading? <a href="{{ config('site.booking_url') }}" target="_blank" rel="noopener" class="font-semibold text-ink underline decoration-brand decoration-2 underline-offset-4 hover:text-brand">Open the booking page</a></p>
                 </div>
             </div>
