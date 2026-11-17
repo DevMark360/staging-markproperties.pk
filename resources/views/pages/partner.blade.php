@@ -325,7 +325,15 @@
                         {{-- Cal.com. Tablets and up: the month and the free times side by side, sized to fit by Cal itself.
                              Phones would stack a long list of times under the month, so they get a button that opens the
                              same booking screen full-screen instead. Cal's script loads only when the section comes near. --}}
-                        <div id="cal-booking" class="hidden min-h-[30rem] overflow-hidden rounded-2xl border border-line bg-white sm:block"></div>
+                        <div class="hidden overflow-hidden rounded-2xl border border-line bg-white sm:block">
+                            {{-- Our own heading for the meeting; Cal draws the month and the times below it with its border turned off, so there is one frame --}}
+                            <div class="flex flex-wrap items-center gap-x-5 gap-y-2 border-b border-line px-6 py-4">
+                                <p class="font-bold text-ink">Partner meeting</p>
+                                <p class="flex items-center gap-1.5 text-sm text-ink-soft"><svg class="h-4 w-4 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 10l5-3v10l-5-3M4 7h11v10H4z"/></svg>Google Meet</p>
+                                <p class="flex items-center gap-1.5 text-sm text-ink-soft"><svg class="h-4 w-4 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 7v5l3 2M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>Times in your own time zone</p>
+                            </div>
+                            <div id="cal-booking"></div>
+                        </div>
                         <div class="rounded-2xl border border-line bg-white p-6 sm:hidden">
                             <p class="font-semibold text-ink">Partner meeting on Google Meet</p>
                             <p class="mt-1 text-sm leading-relaxed text-ink-soft">See the free times and pick the one that suits you.</p>
@@ -341,7 +349,7 @@
                                         Cal.ns.partner('inline', { elementOrSelector: '#cal-booking', calLink: @js($cal), config: { layout: 'month_view', theme: 'light' } });
                                     }
                                     // Brand red, and no event card above the calendar (the text beside it already says what the meeting is)
-                                    Cal.ns.partner('ui', { theme: 'light', hideEventTypeDetails: true, layout: 'month_view', cssVarsPerTheme: { light: { 'cal-brand': '#ed1c24' } } });
+                                    Cal.ns.partner('ui', { theme: 'light', hideEventTypeDetails: true, layout: 'month_view', cssVarsPerTheme: { light: { 'cal-brand': '#ed1c24', 'cal-border-booker': 'transparent', 'cal-bg': '#ffffff' } } });
                                 };
                                 const section = document.getElementById('book-meeting');
                                 const seen = new IntersectionObserver((entries) => {
