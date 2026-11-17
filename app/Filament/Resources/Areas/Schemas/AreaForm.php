@@ -39,8 +39,7 @@ class AreaForm
                         ->rule(new ReadableImage)
                         ->disk('site')
                         ->visibility('public')
-                        ->maxSize(15 * 1024)
-                        ->imagePreviewHeight('160')
+                        ->imagePreviewHeight('160') // no file-size limit: any size the server accepts (config/livewire.php)
                         ->required(fn (Get $get) => $get('show_on_home'))
                         ->saveUploadedFileUsing(fn (TemporaryUploadedFile $file, Get $get) => ImageResizer::store(
                             $file,
