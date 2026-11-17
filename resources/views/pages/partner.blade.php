@@ -319,9 +319,10 @@
                     </ul>
                 </div>
                 <div class="lg:col-span-8">
-                    <div class="overflow-hidden rounded-2xl border border-line bg-white">
+                    {{-- Google draws its own framed card, so no border here (it would double up). Phones stack the calendar above the times, so they need more height. --}}
+                    <div class="overflow-hidden rounded-2xl bg-white">
                         <iframe src="{{ $booking }}" title="Book a meeting with Mark Properties" loading="lazy"
-                            class="block h-[42rem] w-full border-0 sm:h-[44rem]"></iframe>
+                            class="block h-[58rem] w-full border-0 sm:h-[46rem]"></iframe>
                     </div>
                     <p class="mt-3 text-sm text-muted">Calendar not loading? <a href="{{ config('site.booking_url') }}" target="_blank" rel="noopener" class="font-semibold text-ink underline decoration-brand decoration-2 underline-offset-4 hover:text-brand">Open the booking page</a></p>
                 </div>
