@@ -42,7 +42,7 @@ class FinderQuestionForm
                     ->live()
                     ->helperText(fn (Get $get) => $get('source') === 'custom'
                         ? 'Add the options below.'
-                        : 'Taken from the admin list, showing only entries with published projects. Area photos are shown with them.'),
+                        : 'Taken from the admin list, showing only entries with published projects. Add photos for them below.'),
                 Toggle::make('multiple')
                     ->label('Visitors can pick more than one')
                     ->inline(false),
@@ -52,10 +52,13 @@ class FinderQuestionForm
                     ->inline(false)
                     ->helperText('Switch off to skip it without deleting it.'),
             ]),
-            Section::make('Options')
-                ->description('Add a photo to every option to show them as photo cards; without photos they show as simple buttons.')
+            // Own options: a label and a photo each. A list (types, cities, areas, stages): pick an entry and give it a photo;
+            // entries left out still show, with their own photo (areas) or a plain placeholder.
+            Section::make(fn (Get $get) => $get('source') === 'custom' ? 'Options' : 'Photos')
+                ->description(fn (Get $get) => $get('source') === 'custom'
+                    ? 'Add photos to show the options as photo cards (an option without one gets a plain placeholder); with no photos at all they show as simple buttons.'
+                    : 'Optional. Give any entry of the list a photo to show the options as photo cards. Areas already use their own photo unless you add one here.')
                 ->columnSpanFull()
-                ->visible(fn (Get $get) => $get('source') === 'custom')
                 ->schema([
                     Repeater::make('options')
                         ->hiddenLabel()
@@ -63,7 +66,15 @@ class FinderQuestionForm
                             TextInput::make('label')
                                 ->label('Option')
                                 ->required()
-                                ->maxLength(120),
+                                ->maxLength(120)
+                                ->visible(fn (Get $get) => $get('../../source') === 'custom'),
+                            Select::make('key')
+                                ->label(fn (Get $get) => FinderQuestion::SOURCES[$get('../../source')] ?? 'Entry')
+                                ->options(fn (Get $get) => FinderQuestion::listOptions($get('../../source')))
+                                ->searchable()
+                                ->required()
+                                ->distinct()
+                                ->visible(fn (Get $get) => $get('../../source') !== 'custom'),
                             FileUpload::make('image')
                                 ->label('Photo')
                                 ->image()
@@ -76,17 +87,18 @@ class FinderQuestionForm
                                 ->saveUploadedFileUsing(fn (TemporaryUploadedFile $file, Get $get) => ImageResizer::store(
                                     $file,
                                     'uploads/finder',
-                                    Str::slug($get('label') ?: 'option').'-'.Str::lower(Str::random(6)),
+                                    Str::slug($get('label') ?: $get('key') ?: 'option').'-'.Str::lower(Str::random(6)),
                                     ['card'],
                                 )['card'])
                                 ->helperText('Optional. Saved as WebP at 800px wide.'),
                         ])
                         ->columns(2)
-                        ->minItems(2)
-                        ->defaultItems(2)
-                        ->reorderable()
-                        ->addActionLabel('Add an option')
-                        ->itemLabel(fn (array $state) => $state['label'] ?? null)
+                        ->minItems(fn (Get $get) => $get('source') === 'custom' ? 2 : 0)
+                        ->defaultItems(fn (Get $get) => $get('source') === 'custom' ? 2 : 0)
+                        ->reorderable(fn (Get $get) => $get('source') === 'custom') // list entries keep the list's order
+                        ->addActionLabel(fn (Get $get) => $get('source') === 'custom' ? 'Add an option' : 'Add a photo')
+                        ->itemLabel(fn (array $state, Get $get) => $state['label']
+                            ?? (isset($state['key']) ? (FinderQuestion::listOptions($get('source'))[$state['key']] ?? null) : null))
                         ->required(fn (Get $get) => $get('source') === 'custom'),
                 ]),
         ]);

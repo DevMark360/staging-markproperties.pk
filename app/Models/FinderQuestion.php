@@ -43,19 +43,54 @@ class FinderQuestion extends Model
      */
     public function choices(): array
     {
-        $plain = fn (array $labels) => collect($labels)->values()->map(fn ($label) => ['label' => (string) $label, 'image' => null])->all();
-
-        return match ($this->source) {
-            'types' => $plain(Projects::liveTypes()),
-            'cities' => $plain(Projects::liveCities()),
-            'stages' => $plain(Projects::liveStages()),
-            'areas' => once(fn () => Area::query()->whereIn('slug', Projects::all()->pluck('area_slug')->filter()->unique()->values())
-                ->orderBy('name')->get()
-                ->map(fn (Area $a) => ['label' => $a->name, 'image' => Projects::imageUrl($a->image, 'locations')])
-                ->values()->all()),
-            default => collect($this->options ?? [])->filter(fn ($o) => filled($o['label'] ?? null))
+        if ($this->source === 'custom' || ! array_key_exists($this->source, self::SOURCES)) {
+            return collect($this->options ?? [])->filter(fn ($o) => filled($o['label'] ?? null))
                 ->map(fn ($o) => ['label' => trim($o['label']), 'image' => Projects::imageUrl($o['image'] ?? null, 'finder')])
-                ->values()->all(),
+                ->values()->all();
+        }
+
+        // A list: its live entries (slug => name), with the photo given here, or the area's own photo
+        $photos = collect($this->options ?? [])->filter(fn ($o) => filled($o['key'] ?? null) && filled($o['image'] ?? null))
+            ->mapWithKeys(fn ($o) => [$o['key'] => Projects::imageUrl($o['image'], 'finder')]);
+        $own = $this->source === 'areas' ? self::liveAreas()->map(fn (Area $a) => Projects::imageUrl($a->image, 'locations')) : collect();
+
+        return collect(self::liveList($this->source))
+            ->map(fn ($name, $slug) => ['label' => (string) $name, 'image' => $photos[$slug] ?? $own[$slug] ?? null])
+            ->values()->all();
+    }
+
+    /** @return array<string, string> a list's live entries, slug => name */
+    private static function liveList(string $source): array
+    {
+        return match ($source) {
+            'types' => Projects::liveTypes(),
+            'cities' => Projects::liveCities(),
+            'stages' => Projects::liveStages(),
+            'areas' => self::liveAreas()->map(fn (Area $a) => $a->name)->all(),
+            default => [],
+        };
+    }
+
+    /** @return \Illuminate\Support\Collection<string, Area> areas with at least one live project, by slug, A to Z */
+    private static function liveAreas(): \Illuminate\Support\Collection
+    {
+        return once(fn () => Area::query()->whereIn('slug', Projects::all()->pluck('area_slug')->filter()->unique()->values())
+            ->orderBy('name')->get()->keyBy('slug'));
+    }
+
+    /**
+     * Every entry of a list (live or not) for the admin's photo picker, slug => name.
+     *
+     * @return array<string, string>
+     */
+    public static function listOptions(?string $source): array
+    {
+        return match ($source) {
+            'types' => Projects::types(),
+            'cities' => Projects::cities(),
+            'stages' => Projects::stages(),
+            'areas' => Area::query()->orderBy('name')->pluck('name', 'slug')->all(),
+            default => [],
         };
     }
 

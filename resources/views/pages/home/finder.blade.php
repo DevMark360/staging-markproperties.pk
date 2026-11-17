@@ -53,15 +53,20 @@
                                         <span x-show="q.hint && ! q.multiple" x-text="q.hint" class="text-sm text-muted"></span>
                                     </div>
 
-                                    {{-- Photo cards when every option has a photo, otherwise simple buttons --}}
-                                    <template x-if="q.choices.every(c => c.image)">
+                                    {{-- Photo cards when any option has a photo (one without gets a plain placeholder), otherwise simple buttons --}}
+                                    <template x-if="q.choices.some(c => c.image)">
                                         <div class="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4" role="group" :aria-label="q.title">
                                             <template x-for="c in q.choices" :key="c.label">
                                                 <button type="button" @click="choose(q, c.label)" :aria-pressed="isPicked(q.id, c.label)"
                                                     :class="isPicked(q.id, c.label) ? 'border-brand ring-2 ring-brand' : 'border-line hover:border-ink/30'"
                                                     class="group relative overflow-hidden rounded-2xl border bg-white text-left transition duration-200 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-brand/30">
-                                                    <span class="block aspect-[4/3] overflow-hidden bg-mist">
-                                                        <img :src="c.image" alt="" loading="lazy" class="h-full w-full object-cover transition duration-500 ease-out-expo group-hover:scale-[1.04]">
+                                                    <span class="grid aspect-[4/3] place-items-center overflow-hidden bg-mist text-ink/15">
+                                                        <template x-if="c.image">
+                                                            <img :src="c.image" alt="" loading="lazy" class="h-full w-full object-cover transition duration-500 ease-out-expo group-hover:scale-[1.04]">
+                                                        </template>
+                                                        <template x-if="! c.image">
+                                                            <svg class="h-12 w-12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5M5 9v12h14V9M10 21v-6h4v6"/></svg>
+                                                        </template>
                                                     </span>
                                                     <span x-text="c.label" class="block px-3.5 py-3 text-[15px] font-semibold leading-snug text-ink"></span>
                                                     <span x-show="isPicked(q.id, c.label)" x-transition.scale.origin.center class="absolute right-2.5 top-2.5 grid h-7 w-7 place-items-center rounded-full bg-brand text-white shadow">{!! $tick !!}</span>
@@ -69,7 +74,7 @@
                                             </template>
                                         </div>
                                     </template>
-                                    <template x-if="! q.choices.every(c => c.image)">
+                                    <template x-if="! q.choices.some(c => c.image)">
                                         <div class="mt-6 grid gap-3 sm:grid-cols-2" role="group" :aria-label="q.title">
                                             <template x-for="c in q.choices" :key="c.label">
                                                 <button type="button" @click="choose(q, c.label)" :aria-pressed="isPicked(q.id, c.label)"
