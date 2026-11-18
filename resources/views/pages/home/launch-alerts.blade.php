@@ -58,7 +58,7 @@
                                 </label>
                                 <label class="block">
                                     <span class="sr-only">Phone number</span>
-                                    <input type="tel" name="phone" value="{{ old('phone') }}" required autocomplete="tel" inputmode="tel" placeholder="Phone number"
+                                    <input type="tel" name="phone" x-phone value="{{ old('phone') }}" required autocomplete="tel" inputmode="tel" placeholder="Phone number"
                                         class="w-full rounded-xl border border-white/15 bg-white px-4 py-3.5 text-sm text-ink placeholder:text-muted transition-shadow duration-300 focus:outline-none focus:ring-4 focus:ring-brand/40">
                                 </label>
                                 <label class="relative block">

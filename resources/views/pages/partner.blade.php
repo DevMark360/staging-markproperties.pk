@@ -253,7 +253,7 @@
                                     </label>
                                     <label class="block">
                                         <span class="{{ $label }}">Phone number</span>
-                                        <input type="tel" name="phone" value="{{ old('phone') }}" autocomplete="tel" inputmode="tel" placeholder="0300 1234567" class="{{ $field }}">
+                                        <input type="tel" name="phone" x-phone value="{{ old('phone') }}" autocomplete="tel" inputmode="tel" placeholder="0300 1234567" class="{{ $field }}">
                                     </label>
                                     <label class="block sm:col-span-2">
                                         <span class="{{ $label }}">Email <span class="font-normal text-muted">(optional)</span></span>

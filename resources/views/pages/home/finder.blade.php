@@ -144,7 +144,7 @@
                                     </label>
                                     <label class="block">
                                         <span class="text-sm font-semibold text-ink">Phone number</span>
-                                        <input type="tel" name="phone" required autocomplete="tel" inputmode="tel" placeholder="0300 1234567" class="{{ $field }}">
+                                        <input type="tel" name="phone" x-phone required autocomplete="tel" inputmode="tel" placeholder="0300 1234567" class="{{ $field }}">
                                     </label>
                                     <label class="block">
                                         <span class="text-sm font-semibold text-ink">Email <span class="font-normal text-muted">(optional)</span></span>

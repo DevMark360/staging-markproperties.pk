@@ -5,11 +5,13 @@ import combo from './combo.js';
 import intersect from '@alpinejs/intersect';
 import squeeze from './squeeze.js';
 import finder from './finder.js';
+import phone from './phone.js';
 
 Alpine.plugin(collapse);
 Alpine.plugin(combo); // x-combo: modern, searchable dropdowns over the native selects
 Alpine.plugin(focus); // x-trap: keyboard focus stays inside an open pop-up panel and returns to its button after (L3)
 Alpine.plugin(intersect);
+Alpine.plugin(phone); // x-phone: country flag + dialling code picker on phone fields
 
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 

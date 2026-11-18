@@ -255,7 +255,7 @@
                                 <label><span class="sr-only">Email address</span>
                                     <input type="email" name="email" required autocomplete="email" placeholder="Email address" class="w-full rounded-xl border border-line bg-white px-4 py-3 text-sm text-ink placeholder:text-muted focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5"></label>
                                 <label><span class="sr-only">Phone number</span>
-                                    <input type="tel" name="phone" required autocomplete="tel" inputmode="tel" placeholder="Phone number" class="w-full rounded-xl border border-line bg-white px-4 py-3 text-sm text-ink placeholder:text-muted focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5"></label>
+                                    <input type="tel" name="phone" x-phone required autocomplete="tel" inputmode="tel" placeholder="Phone number" class="w-full rounded-xl border border-line bg-white px-4 py-3 text-sm text-ink placeholder:text-muted focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5"></label>
                                 <button type="submit" :disabled="sending" class="btn btn-primary btn-sm disabled:opacity-75">
                                     <span x-text="sending ? 'Saving…' : 'Notify me'">Notify me</span>
                                 </button>

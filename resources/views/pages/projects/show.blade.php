@@ -358,7 +358,7 @@
                         ] as [$field, $type, $label, $placeholder, $autocomplete, $required])
                             <label class="block">
                                 <span class="mb-1.5 block text-[13px] font-semibold text-ink">{{ $label }} @unless ($required)<span class="font-normal text-muted">(optional)</span>@endunless</span>
-                                <input type="{{ $type }}" name="{{ $field }}" value="{{ old($field) }}" placeholder="{{ $placeholder }}" autocomplete="{{ $autocomplete }}" @if ($required) required @endif @if ($type === 'tel') inputmode="tel" @endif
+                                <input type="{{ $type }}" name="{{ $field }}" value="{{ old($field) }}" placeholder="{{ $placeholder }}" autocomplete="{{ $autocomplete }}" @if ($required) required @endif @if ($type === 'tel') inputmode="tel" x-phone @endif
                                     class="w-full rounded-xl border border-line bg-white px-4 py-3 text-sm text-ink transition-all duration-200 placeholder:text-muted/70 focus:border-ink focus:outline-none focus:ring-4 focus:ring-ink/5">
                             </label>
                         @endforeach
