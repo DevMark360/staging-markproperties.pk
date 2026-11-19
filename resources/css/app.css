@@ -874,6 +874,19 @@ html {
 .iti__country[aria-selected='true'] .iti__country-check {
     color: var(--color-brand);
 }
+.iti--invalid .iti__tel-input,
+.iti--invalid .iti__tel-input:focus {
+    border-color: var(--color-brand);
+}
+.phone-error {
+    margin-top: 0.375rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-brand);
+}
+.phone-error[hidden] {
+    display: none;
+}
 .iti__no-results {
     padding: 1.25rem 0;
     font-size: 0.875rem;

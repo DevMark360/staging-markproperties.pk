@@ -146,7 +146,7 @@
                                     </label>
                                     <label class="block">
                                         <span class="{{ $label }}">Phone number</span>
-                                        <input type="tel" name="phone" x-phone @input="phone = $el.value" required autocomplete="tel" inputmode="tel" placeholder="0300 1234567" class="{{ $field }}">
+                                        <input type="tel" name="phone" x-phone @phone="phone = $event.detail.readable" required autocomplete="tel" inputmode="tel" placeholder="0300 1234567" class="{{ $field }}">
                                     </label>
                                     {{-- City, then that city's areas (from the admin; only cities and areas with live projects). Both required (C-06). --}}
                                     <label class="block">
