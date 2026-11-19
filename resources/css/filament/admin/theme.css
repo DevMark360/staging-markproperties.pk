@@ -79,6 +79,27 @@
     @apply size-4 text-gray-400 dark:text-gray-500;
 }
 
+/* Theme switch in the logo menu: three equal buttons in a grey track, the chosen one raised */
+.mp-brand-theme {
+    @apply mx-1 mt-1 border-t border-gray-950/5 px-1.5 pt-2.5 pb-1.5 dark:border-white/10;
+}
+
+.mp-brand-theme-label {
+    @apply mb-1.5 block px-1 text-[11px] font-medium text-gray-500 dark:text-gray-400;
+}
+
+.mp-brand-theme-options {
+    @apply grid grid-cols-3 gap-0.5 rounded-lg bg-gray-950/5 p-0.5 dark:bg-white/5;
+}
+
+.mp-brand-theme-btn {
+    @apply flex flex-col items-center gap-1 rounded-md px-1 py-1.5 text-[11px] font-medium text-gray-600 transition-colors outline-hidden hover:text-gray-900 focus-visible:ring-2 focus-visible:ring-primary-500 dark:text-gray-400 dark:hover:text-white;
+}
+
+.mp-brand-theme-btn.is-active {
+    @apply bg-white text-gray-900 shadow-sm ring-1 ring-gray-950/5 dark:bg-gray-700 dark:text-white dark:ring-white/10;
+}
+
 /* ---------------------------------------------------------------- Search row (opens the pop-up) */
 .mp-sidebar-search {
     @apply flex w-full items-center gap-x-2.5 rounded-md px-2.5 py-[7px] text-start outline-hidden transition-colors hover:bg-gray-950/5 focus-visible:bg-gray-950/5 dark:hover:bg-white/5 dark:focus-visible:bg-white/5;

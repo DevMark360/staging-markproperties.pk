@@ -1,4 +1,4 @@
-{{-- Sidebar top: the Mark Properties / AbadRaho.com logo. Clicking it opens a small menu with who is signed in and their profile. --}}
+{{-- Sidebar top: the Mark Properties / AbadRaho.com logo. Clicking it opens a small menu with who is signed in, their profile and the light/dark theme. --}}
 @php($user = filament()->auth()->user())
 
 <div class="mp-brand-menu" x-data="{ open: false }" x-on:keydown.escape.window="open = false" x-on:click.outside="open = false">
@@ -21,5 +21,22 @@
                 My profile
             </a>
         @endif
+        {{-- Theme: light, dark, or follow the computer's setting (saved in this browser, like Filament's own switcher) --}}
+        <div class="mp-brand-theme" role="group" aria-label="Theme"
+            x-data="{ theme: localStorage.getItem('filament:theme:mode') || @js(filament()->getDefaultThemeMode()->value) }"
+            x-init="$watch('theme', (value) => $dispatch('theme-changed', value))">
+            <span class="mp-brand-theme-label">Theme</span>
+            <div class="mp-brand-theme-options">
+                @foreach (['light' => ['Light', 'heroicon-m-sun'], 'dark' => ['Dark', 'heroicon-m-moon'], 'system' => ['System', 'heroicon-m-computer-desktop']] as $mode => [$label, $icon])
+                    <button type="button" role="menuitemradio" class="mp-brand-theme-btn"
+                        x-on:click="theme = @js($mode)"
+                        x-bind:aria-checked="theme === @js($mode) ? 'true' : 'false'"
+                        x-bind:class="{ 'is-active': theme === @js($mode) }">
+                        <x-filament::icon :icon="$icon" class="size-4" />
+                        {{ $label }}
+                    </button>
+                @endforeach
+            </div>
+        </div>
     </div>
 </div>
