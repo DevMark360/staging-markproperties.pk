@@ -11,6 +11,7 @@ use App\Models\Project;
 use App\Models\PropertyType;
 use App\Models\Stage;
 use App\Rules\ReadableImage;
+use App\Support\GoogleMapsLocation;
 use App\Support\ImageResizer;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
@@ -19,6 +20,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
@@ -212,6 +214,37 @@ class ProjectForm
     private static function location(): Tab
     {
         return Tab::make('Location & brochure')->icon('heroicon-o-map-pin')->columns(2)->schema([
+            // Google's "Embed a map" code (or any Google Maps link): its exact pin fills Latitude and Longitude, which
+            // place the project on its page and on the projects map. The code itself isn't saved.
+            Textarea::make('google_map')
+                ->label('Google Maps embed code or link')
+                ->rows(3)
+                ->placeholder('<iframe src="https://www.google.com/maps/embed?pb=..." ...></iframe>')
+                ->dehydrated(false)
+                ->live(onBlur: true)
+                ->afterStateUpdated(function ($state, Set $set) {
+                    if (blank($state)) {
+                        return;
+                    }
+                    $point = GoogleMapsLocation::coordinates((string) $state);
+                    if (! $point) {
+                        Notification::make()->danger()
+                            ->title('No location found in that code')
+                            ->body('In Google Maps, open the project, click Share, then "Embed a map", copy the HTML and paste it here.')
+                            ->send();
+
+                        return;
+                    }
+                    $set('latitude', (string) $point[0]);
+                    $set('longitude', (string) $point[1]);
+                    $set('google_map', null);
+                    Notification::make()->success()
+                        ->title('Location set')
+                        ->body("Latitude {$point[0]}, longitude {$point[1]}. Save the project to keep it.")
+                        ->send();
+                })
+                ->helperText('In Google Maps, open the project, click Share, then "Embed a map" and copy the HTML. Paste it here and click outside the box: the exact pin fills Latitude and Longitude below. A Google Maps link works too.')
+                ->columnSpanFull(),
             // Plain text boxes (not number boxes): a number box silently refuses Google's "lat, lng" paste and keeps
             // its old value. Pasting the pair into Latitude fills both. Stored with all 15 decimal places.
             TextInput::make('latitude')
