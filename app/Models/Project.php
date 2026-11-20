@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
     'name', 'slug', 'developer_slug', 'stage_slug', 'city_slug', 'area', 'area_slug', 'address', 'type_slug', 'is_published',
     'show_on_home', 'home_order', 'is_trending', 'trending_order',
     'description', 'highlights', 'amenities', 'utilities',
-    'image', 'gallery', 'hero_image', 'latitude', 'longitude', 'brochure',
+    'image', 'gallery', 'hero_image', 'latitude', 'longitude', 'map_embed', 'brochure',
 ])]
 class Project extends Model
 {

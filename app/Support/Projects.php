@@ -67,6 +67,7 @@ class Projects
             'gallery' => array_values($p->gallery ?? []),
             'latitude' => $p->latitude,
             'longitude' => $p->longitude,
+            'map_embed' => $p->map_embed,
             'brochure' => $p->brochure,
         ];
     }

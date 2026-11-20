@@ -214,13 +214,13 @@ class ProjectForm
     private static function location(): Tab
     {
         return Tab::make('Location & brochure')->icon('heroicon-o-map-pin')->columns(2)->schema([
-            // Google's "Embed a map" code (or any Google Maps link): its exact pin fills Latitude and Longitude, which
-            // place the project on its page and on the projects map. The code itself isn't saved.
-            Textarea::make('google_map')
-                ->label('Google Maps embed code or link')
+            // Google's "Embed a map" code: saved (only its Google address) and shown as the map on the project page, and
+            // its pin fills Latitude and Longitude, which place the project on the projects map. A plain Google Maps
+            // link only fills the coordinates (the page then draws its usual map from them).
+            Textarea::make('map_embed')
+                ->label('Google Maps embed code')
                 ->rows(3)
                 ->placeholder('<iframe src="https://www.google.com/maps/embed?pb=..." ...></iframe>')
-                ->dehydrated(false)
                 ->live(onBlur: true)
                 ->afterStateUpdated(function ($state, Set $set) {
                     if (blank($state)) {
@@ -237,13 +237,16 @@ class ProjectForm
                     }
                     $set('latitude', (string) $point[0]);
                     $set('longitude', (string) $point[1]);
-                    $set('google_map', null);
+                    $embed = GoogleMapsLocation::embedUrl((string) $state);
+                    $set('map_embed', $embed);
                     Notification::make()->success()
-                        ->title('Location set')
-                        ->body("Latitude {$point[0]}, longitude {$point[1]}. Save the project to keep it.")
+                        ->title($embed ? 'Map and location set' : 'Location set')
+                        ->body("Latitude {$point[0]}, longitude {$point[1]}.".($embed ? ' The project page will show this Google map.' : '').' Save the project to keep it.')
                         ->send();
                 })
-                ->helperText('In Google Maps, open the project, click Share, then "Embed a map" and copy the HTML. Paste it here and click outside the box: the exact pin fills Latitude and Longitude below. A Google Maps link works too.')
+                // Only Google's own embed address is kept, never other HTML
+                ->dehydrateStateUsing(fn ($state) => GoogleMapsLocation::embedUrl((string) $state))
+                ->helperText('In Google Maps, open the project, click Share, then "Embed a map" and copy the HTML. Paste it here and click outside the box: the project page shows this map, and the exact pin fills Latitude and Longitude below (used on the projects map). Empty: the page draws a map from the coordinates.')
                 ->columnSpanFull(),
             // Plain text boxes (not number boxes): a number box silently refuses Google's "lat, lng" paste and keeps
             // its old value. Pasting the pair into Latitude fills both. Stored with all 15 decimal places.

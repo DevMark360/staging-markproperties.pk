@@ -294,7 +294,8 @@
                     <svg class="mt-0.5 h-4 w-4 shrink-0 text-brand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z" stroke-linejoin="round"/><circle cx="12" cy="9.5" r="2.5"/></svg>
                     {{ $project['address'] ?: $location }}
                 </p>
-                <x-map-embed :src="'https://www.google.com/maps?q='.rawurlencode($mapQuery).'&z=15&output=embed'" :title="'Map of '.$project['name']"
+                {{-- The admin's Google "Embed a map" code when there is one (the exact place with its Google card), else a map of the coordinates or address --}}
+                <x-map-embed :src="($project['map_embed'] ?? null) ?: 'https://www.google.com/maps?q='.rawurlencode($mapQuery).'&z=15&output=embed'" :title="'Map of '.$project['name']"
                     :address="$project['address'] ?: $location" class="mt-5 h-80 rounded-xl sm:h-96">
                     <a href="https://www.google.com/maps/search/?api=1&query={{ rawurlencode($mapQuery) }}" target="_blank" rel="noopener"
                         class="btn btn-primary btn-sm absolute bottom-4 right-4 shadow-lg">Get directions</a>
