@@ -771,6 +771,55 @@ html {
 }
 
 /*
+| Project page, phone action bar: "Enquire now" shakes for a moment every few seconds, with a red ring pulsing out,
+| until the visitor taps it or scrolls to the enquiry form (then the class is removed). Off with reduced motion.
+*/
+.btn-nudge {
+    animation:
+        nudge-shake 3.6s ease-in-out 1.5s infinite,
+        nudge-ring 3.6s ease-out 1.5s infinite;
+}
+@keyframes nudge-shake {
+    0%, 16%, 100% {
+        transform: translateX(0);
+    }
+    2% {
+        transform: translateX(-6px);
+    }
+    4% {
+        transform: translateX(6px);
+    }
+    6% {
+        transform: translateX(-5px);
+    }
+    8% {
+        transform: translateX(5px);
+    }
+    10% {
+        transform: translateX(-3px);
+    }
+    12% {
+        transform: translateX(3px);
+    }
+    14% {
+        transform: translateX(-1px);
+    }
+}
+@keyframes nudge-ring {
+    0% {
+        box-shadow: 0 0 0 0 rgb(237 28 36 / 0.5);
+    }
+    35%, 100% {
+        box-shadow: 0 0 0 14px rgb(237 28 36 / 0);
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .btn-nudge {
+        animation: none;
+    }
+}
+
+/*
 | x-phone (resources/js/phone.js): intl-tel-input's flag + dialling code picker, styled like the x-combo dropdowns
 */
 .iti {

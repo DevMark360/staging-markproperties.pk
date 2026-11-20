@@ -419,7 +419,12 @@
     {{-- ───────────── Mobile action bar ───────────── --}}
     <div class="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white/95 p-3 backdrop-blur-md lg:hidden">
         <div class="flex gap-2">
-            <button type="button" @click="$dispatch('enquire', { interest: 'general' })" x-data
+            {{-- Shakes now and then with a pulse ring to draw the eye, until the visitor taps it or scrolls to the form --}}
+            <button type="button" @click="seen = true; $dispatch('enquire', { interest: 'general' })"
+                x-data="{ seen: false }"
+                x-init="const form = document.getElementById('enquire');
+                    if (form) { const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { seen = true; io.disconnect(); } }, { threshold: 0.25 }); io.observe(form); }"
+                :class="{ 'btn-nudge': ! seen }"
                 class="btn btn-primary flex-1">Enquire now</button>
         </div>
     </div>
